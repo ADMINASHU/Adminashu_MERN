@@ -4,6 +4,7 @@ route.use(express.json());
 const userModel = require("./userSchema");
 const cors = require("cors");
 route.use(cors());
+const bcrypt = require("bcryptjs");
 
 route.post("/register", async (req, res) => {
   const { uname, email, password, cPassword } = req.body;
@@ -34,13 +35,21 @@ route.post("/signin", async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).send("Please fill all field");
+      return res.status(400).json("Please fill all field");
     }
     const dbUser = await userModel.findOne({ email: email });
-    if (dbUser.password === password) {
-      return res.status(200).json(dbUser);
+    if (dbUser) {
+      const isMatch = await bcrypt.compare(password, dbUser.password);
+      if (!isMatch) {
+        return res.status(400).json("invalid credentials");
+      } else {
+        const { uname, email, password, cPassword } = dbUser;
+        const UserData = { uname, email}
+        return res.status(200).json(UserData);
+        // send user data to front-end
+      }
     } else {
-      return res.status(400).send("invalid credential");
+      return res.status(400).json("invalid credentials");
     }
   } catch (error) {
     console.log(error);

@@ -21,25 +21,36 @@ const Login = ({ login, setLogin, setLogUser }) => {
 
   const submitSignIN = async (e) => {
     e.preventDefault();
-    try {
-      const sendData = await fetch("http://localhost:4000/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      });
-      const result = await sendData.json();
-      setLogUser(result);
-      if (result) {
-        setUser({});
-        console.log("User SignIn");
-        setLogin("true");
-        navigate("/profile");
+
+    if (!email || !password) {
+      alert("Please fill all field");
+    } else {
+      try {
+        const sendData = await fetch("http://localhost:4000/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        });
+        const result = await sendData.json();
+        if (!result) {
+          alert("Server down");
+          setLogUser({});
+        } else if (sendData.status === 400) {
+          alert("invalid credentials");
+          setLogUser({});
+        } else if (sendData.status === 200) {
+          setLogUser(result);
+          setUser({});
+          console.log("User SignIn");
+          setLogin("true");
+          navigate("/profile");
+        }
+      } catch (error) {
+        console.log(error);
+        setLogin("false");
       }
-    } catch (error) {
-      console.log(error);
-      setLogin("false");
     }
   };
 
@@ -76,10 +87,7 @@ const Login = ({ login, setLogin, setLogUser }) => {
             onChange={handleInput}
           />
         </div>
-        <button
-          className="btn btn-logIn"
-          type="submit"
-        >
+        <button className="btn btn-logIn" type="submit">
           LogIn
         </button>
       </form>
