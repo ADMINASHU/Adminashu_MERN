@@ -1,0 +1,298 @@
+$primary-color: #040480;
+$primary-text-color: rgb(97, 97, 97);
+$bg-nav-color: rgba(231, 231, 231, 0.961);
+
+.navbar {
+    // background-color: red;
+    display: flex;
+    position: fixed;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    height: 60px;
+
+    .logo {
+        height: 50px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+
+        .first {
+            color: $primary-color;
+            margin: 0 0 0 10px;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke-width: 1.5px;
+        }
+
+        .last {
+            color: $primary-color;
+            margin: 0 1rem 0 0;
+        }
+    }
+
+    .navLinks {
+        // background-color: rgb(204, 0, 255);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // gap: 1rem;
+
+        .links {
+            // background-color: red;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            list-style: none;
+            font-size: 1.4rem;
+            // color: red;
+
+            .link {
+                // background-color: green;
+                text-decoration: none;
+                margin: 0 1rem;
+                color: $primary-text-color;
+                font-weight: 600;
+                display: block;
+                transition: all ease-in-out .3s;
+
+                &:hover {
+                    color: $primary-color;
+                }
+            }
+
+            .active {
+                color: $primary-color;
+                font-weight: 600;
+                position: relative;
+                transition: all ease-in-out .3s;
+
+                &::after {
+                    content: "";
+                    width: 100%;
+                    height: 5px;
+                    top: 30px;
+                    border-radius: 100vw;
+                    background-color: $primary-color;
+                    display: block;
+                    position: absolute;
+                }
+            }
+        }
+
+        .account {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            
+            .profile {
+                display: grid;
+                place-items: center;
+                background-color: $primary-color;
+                height: 35px;
+                width: 35px;
+                border-radius: 50%;
+                text-decoration: none;
+                .letter {
+                    color: white;
+                    font-size: 1.4rem;
+                }
+            }
+            .userName {
+                margin-left: 5px;
+                color: $primary-color;
+                font-size: 1.4rem;
+                font-weight: 600;
+            }
+        }
+
+        .register {
+            // background-color: blue;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+
+            .logIn {
+                margin: 0 1rem;
+                font-size: 1.4rem;
+                text-decoration: none;
+                color: $primary-text-color;
+                font-weight: 600;
+                transition: all ease-in-out .3s;
+
+                &:hover {
+                    color: $primary-color;
+                }
+            }
+
+            .signUp {
+                transition: all ease-in-out .3s;
+                padding: 6px 20px;
+                border-radius: 100vw;
+                border: none;
+                background-color: $primary-color;
+                color: white;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.359);
+                font-size: 1.4rem;
+                text-decoration: none;
+                font-weight: 600;
+
+                &:hover {
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.659);
+                }
+            }
+
+            .active.logIn {
+
+                color: $primary-color;
+                font-weight: 600;
+                position: relative;
+
+                &::after {
+                    content: "";
+                    width: 100%;
+                    height: 5px;
+                    top: 30px;
+                    border-radius: 100vw;
+                    background-color: $primary-color;
+                    display: block;
+                    position: absolute;
+                }
+
+            }
+        }
+    }
+
+    .menuImg {
+        z-index: 99;
+        // background-color: red;
+        display: none;
+        transition: all ease-in-out .3s;
+
+    }
+
+}
+
+@media screen and (max-width:800px) {
+    .navbar {
+        padding: 0 10%;
+        transition: all ease-in-out .3s;
+
+        .menuImg {
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all ease-in-out .3s;
+        }
+
+        .navLinks {
+            background-color: $bg-nav-color;
+            flex-direction: column-reverse;
+            position: absolute;
+            top: 60px;
+            right: 10%;
+            padding: 5px;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.659);
+
+
+            .account {
+                height: 60px;
+                margin-bottom: 5px;
+                border-bottom: 5px solid $primary-color;
+                padding: 10px 15px;
+            }
+            .register {
+                height: 60px;
+                margin-bottom: 5px;
+                border-bottom: 5px solid $primary-color;
+
+                .logIn,
+                .signUp {
+                    color: $primary-text-color;
+                    background-color: $bg-nav-color;
+                    border-radius: none;
+                    box-shadow: none;
+                    padding: 10px 30px;
+
+                    &:hover {
+                        color: $primary-color;
+                        box-shadow: none;
+                    }
+                }
+
+                .active {
+
+                    padding: 10px 30px;
+                    border-radius: 100vw;
+                    border: none;
+                    background-color: $primary-color;
+                    color: white;
+                    box-shadow: 0 0 3px rgba(0, 0, 0, 0.359);
+                    transition: all 1sec;
+                    font-size: 1.4rem;
+                    text-decoration: none;
+                    font-weight: 600;
+
+                    &:hover {
+                        color: white;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.659);
+                    }
+                }
+
+                .active.logIn {
+                    color: white;
+                    // padding: 10px 30px;
+
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
+
+            .links {
+                display: grid;
+                grid-template-columns: 1fr;
+                border-radius: 10px;
+                width: 100%;
+
+                .link {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 50px;
+                    margin: 4px 0;
+                    border-radius: 100vw;
+                }
+
+                .active {
+                    color: white;
+                    background-color: $primary-color;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.659);
+
+
+                    &::after {
+                        display: none;
+                    }
+                }
+
+                .active.link {
+                    &:hover {
+
+                        color: white;
+                    }
+                }
+            }
+
+        }
+
+        .hide {
+            display: none;
+            transition: all ease-in-out .3;
+        }
+    }
+}

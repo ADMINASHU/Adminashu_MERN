@@ -1,0 +1,35 @@
+$primary-color: #040480;
+$primary-bg-color: rgb(243, 243, 243);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $primary-bg-color ;
+}
+
+
+.btn {
+  padding: 8px 20px;
+  border-radius: 100vw;
+  border: none;
+  background-color: $primary-color;
+  color: white;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.359);
+  transition: all ease-in-out 1sec;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.659);
+  }
+
+  &:active {
+    background-color: #36367a;
+    ;
+    color: white;
+  }
+}
