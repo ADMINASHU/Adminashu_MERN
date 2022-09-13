@@ -22,29 +22,49 @@ const SignUp = () => {
   };
 
   const { uname, email, password, cPassword } = user;
-  const submitSignUp = async () => {
-    try {
-      const sendData = await fetch("http://localhost:4000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      });
-      const result = await sendData.json();
-      if (result) {
-        setUser(userObj);
-        navigate("/logIn");
+  const submitSignUp = async (e) => {
+    e.preventDefault();
+
+    if (!uname || !email || !password || !cPassword) {
+      alert("Please fill all field");
+    } else if (password !== cPassword) {
+      alert("Confirm password not matched");
+    } else {
+      try {
+        const sendData = await fetch("http://localhost:4000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        });
+        const result = await sendData.json();
+        if (!result) {
+          alert("Server down");
+        } else if (sendData.status === 412) {
+          alert("Confirm password not matched");
+        } else if (sendData.status === 400) {
+          alert("Please fill all field");
+        } else if (sendData.status === 422) {
+          alert("Email Id already exist");
+        } else if (sendData.status === 500) {
+          alert("User registration field");
+        } else {
+          setUser(userObj);
+          navigate("/logIn");
+          alert("User registration successfully");
+        }
+      } catch (error) {
+        console.log(error);
+        navigate("/signUp");
+        alert("Server down");
       }
-    } catch (error) {
-      console.log(error);
-      navigate("/signUp");
     }
   };
 
   return (
     <div className="signUpPage">
-      <div className="signUpForm">
+      <form method="post" onSubmit={submitSignUp} className="signUpForm" id="signUpForm" >
         <h1>SignUp</h1>
         <div className="inputBox">
           <UserImg fill={priColor} height="16" />
@@ -54,7 +74,7 @@ const SignUp = () => {
             placeholder="Name"
             name="uname"
             value={uname}
-            autoComplete="false"
+            autoComplete="none" 
             required
             onChange={handleInput}
           />
@@ -63,11 +83,11 @@ const SignUp = () => {
           <EmailImg fill={priColor} height="16" />
           <input
             className="input"
-            type="text"
+            type="email"
             placeholder="Email"
             name="email"
             value={email}
-            autoComplete="false"
+            autoComplete="none"
             required
             onChange={handleInput}
           />
@@ -80,8 +100,9 @@ const SignUp = () => {
             placeholder="Password"
             name="password"
             value={password}
-            autoComplete="false"
+            autoComplete="none"
             required
+            minLength="6"
             onChange={handleInput}
           />
         </div>
@@ -93,7 +114,7 @@ const SignUp = () => {
             placeholder="Confirm Password"
             name="cPassword"
             value={cPassword}
-            autoComplete="false"
+            autoComplete="none"
             required
             onChange={handleInput}
           />
@@ -102,11 +123,11 @@ const SignUp = () => {
         <button
           className="btn btn-signUp"
           type="submit"
-          onClick={() => submitSignUp()}
+         
         >
           SignUp
         </button>
-      </div>
+      </form>
       <div className="signUpImage">
         <img src={bgImage} alt="Register" />
       </div>

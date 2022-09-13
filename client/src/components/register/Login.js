@@ -9,7 +9,7 @@ const Login = ({ login, setLogin, setLogUser }) => {
   const [user, setUser] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   if (login === "true") {
-    navigate("/profile")
+    navigate("/profile");
   }
 
   const handleInput = (e) => {
@@ -19,7 +19,8 @@ const Login = ({ login, setLogin, setLogUser }) => {
   const { email, password } = user;
   const priColor = "#040480";
 
-  const submitSignIN = async () => {
+  const submitSignIN = async (e) => {
+    e.preventDefault();
     try {
       const sendData = await fetch("http://localhost:4000/signin", {
         method: "POST",
@@ -29,7 +30,7 @@ const Login = ({ login, setLogin, setLogUser }) => {
         body: JSON.stringify(user),
       });
       const result = await sendData.json();
-      setLogUser(result)
+      setLogUser(result);
       if (result) {
         setUser({});
         console.log("User SignIn");
@@ -47,17 +48,18 @@ const Login = ({ login, setLogin, setLogUser }) => {
       <div className="logInImage">
         <img src={bgImage} alt="LogIn" />
       </div>
-      <div className="logInForm">
+      <form method="post" onSubmit={submitSignIN} className="logInForm">
         <h1>LogIn</h1>
         <div className="inputBox">
           <UserImg fill={priColor} height="16" />
           <input
             className="input"
-            type="text"
+            type="email"
             placeholder="User Id"
             name="email"
             value={email}
-            autoComplete="false"
+            autoComplete="none"
+            required
             onChange={handleInput}
           />
         </div>
@@ -69,18 +71,18 @@ const Login = ({ login, setLogin, setLogUser }) => {
             placeholder="Password"
             name="password"
             value={password}
-            autoComplete="false"
+            autoComplete="none"
+            required
             onChange={handleInput}
           />
         </div>
         <button
           className="btn btn-logIn"
           type="submit"
-          onClick={() => submitSignIN()}
         >
           LogIn
         </button>
-      </div>
+      </form>
     </div>
   );
 };

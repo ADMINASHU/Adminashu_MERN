@@ -8,18 +8,24 @@ route.use(cors());
 route.post("/register", async (req, res) => {
   const { uname, email, password, cPassword } = req.body;
   if (!uname || !email || !password || !cPassword) {
-    return res.status(422).json({ "error": "please fill all field" });
-  }
-  try {
-    const userExist = await userModel.findOne({ email: email });
-    if (userExist) {
-      return res.status(422).json({ "error": "User already exist" });
+    return res.status(400).json({ error: "please fill all field" });
+  } else if (password != cPassword) {
+    return res.status(412).json({ error: "Confirm password not matched" });
+  } else {
+    try {
+      const userExist = await userModel.findOne({ email: email });
+      if (userExist) {
+        return res.status(422).json({ error: "User already exist" });
+      }
+
+      const user = new userModel({ uname, email, password });
+
+      await user.save();
+      return res.status(201).json({ msg: "User registered successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "User registration failed" });
     }
-    const user = new userModel({ uname, email, password });
-    const result = await user.save();
-    res.send(result);
-  } catch (error) {
-    console.log(error);
   }
 });
 
