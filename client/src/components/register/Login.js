@@ -5,6 +5,10 @@ import bgImage from "../../assets/images/login.svg";
 import "./signUp.scss";
 import { useNavigate } from "react-router-dom";
 
+
+
+
+
 const Login = ({ login, setLogin, setLogUser }) => {
   const [user, setUser] = useState({ email: "", password: "" });
   const navigate = useNavigate();
@@ -34,6 +38,7 @@ const Login = ({ login, setLogin, setLogUser }) => {
           body: JSON.stringify(user),
         });
         const result = await sendData.json();
+        console.log(result);
         if (!result) {
           alert("Server down");
           setLogUser({});
@@ -47,6 +52,12 @@ const Login = ({ login, setLogin, setLogUser }) => {
           setLogin("true");
           navigate("/profile");
         }
+        // else{
+        //   console.log(result);
+        //   console.log("User SignIn");
+        //   setLogin("true");
+        //   navigate("/profile");
+        // }
       } catch (error) {
         console.log(error);
         setLogin("false");

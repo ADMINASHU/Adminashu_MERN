@@ -5,6 +5,7 @@ const userModel = require("./userSchema");
 const cors = require("cors");
 route.use(cors());
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 route.post("/register", async (req, res) => {
   const { uname, email, password, cPassword } = req.body;
@@ -20,6 +21,13 @@ route.post("/register", async (req, res) => {
       }
 
       const user = new userModel({ uname, email, password });
+
+      const token = await user.generateAuthToken();
+      res.cookie("AuthToken", token, {
+        expires: new Date(Date.now() + 30000),
+        httpOnly: true,
+      });
+      console.log("SignUp_token: " + token);
 
       await user.save();
       return res.status(201).json({ msg: "User registered successfully" });
@@ -38,14 +46,27 @@ route.post("/signin", async (req, res) => {
       return res.status(400).json("Please fill all field");
     }
     const dbUser = await userModel.findOne({ email: email });
+
+    const token = await dbUser.generateAuthToken();
+    res.cookie("AuthToken", token);
+    console.log("logtoken: " + token);
+
     if (dbUser) {
       const isMatch = await bcrypt.compare(password, dbUser.password);
+
+      // console.log("cookie: " + cookie);
+
       if (!isMatch) {
         return res.status(400).json("invalid credentials");
       } else {
         const { uname, email, password, cPassword } = dbUser;
-        const UserData = { uname, email}
-        return res.status(200).json(UserData);
+        const UserData = { uname, email };
+        res.status(200).json(UserData);
+        // const token = await dbUser.generateAuthToken();
+        // return res.cookie("token", token, {
+        //   expires: new Date(Date.now() + 86400000),
+        //   httpOnly: true,
+        // });
         // send user data to front-end
       }
     } else {
