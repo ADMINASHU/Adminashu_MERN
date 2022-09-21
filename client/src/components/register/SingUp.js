@@ -25,41 +25,7 @@ const SignUp = () => {
   const submitSignUp = async (e) => {
     e.preventDefault();
 
-    if (!uname || !email || !password || !cPassword) {
-      alert("Please fill all field");
-    } else if (password !== cPassword) {
-      alert("Confirm password not matched");
-    } else {
-      try {
-        const sendData = await fetch("http://localhost:4000/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        });
-        const result = await sendData.json();
-        if (!result) {
-          alert("Server down");
-        } else if (sendData.status === 412) {
-          alert("Confirm password not matched");
-        } else if (sendData.status === 400) {
-          alert("Please fill all field");
-        } else if (sendData.status === 422) {
-          alert("Email Id already exist");
-        } else if (sendData.status === 500) {
-          alert("User registration field");
-        } else {
-          setUser(userObj);
-          navigate("/logIn");
-          alert("User registration successfully");
-        }
-      } catch (error) {
-        console.log(error);
-        navigate("/signUp");
-        alert("Server down");
-      }
-    }
+  
   };
 
   return (
