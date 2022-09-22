@@ -56,20 +56,23 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "/register",
-        JSON.stringify({
+        "/signin",
+        {
           uname: userName,
           password: password,
-        }),
+        },
         {
           header: { "content-Type": "application/json" },
-          withCredentials: true,
+          withCredentials: false,
         }
       );
-      console.log(response?.data);
-      const accessToken = response?.data?.accessToken;
+      // console.log(response?.data);
+      const username = response?.data?.username;
+      const email = response?.data?.email;
       const role = response?.data?.role;
-      setAuth({ userName, role, accessToken });
+      const accessToken = response?.data?.accessToken;
+      setAuth({ username, email, role, accessToken });
+      console.log(accessToken);
       setUserName("");
       setPassword("");
       setSuccess(true);
@@ -77,11 +80,11 @@ const Login = () => {
       if (!error?.response) {
         setErrMsg("Server not responding");
       } else if (error.response?.status === 400) {
-        setErrMsg("Missing Credentials");
+        setErrMsg("Please fill all field");
       } else if (error.response?.status === 401) {
-        setErrMsg("Unauthorized");
+        setErrMsg("invalid credentials");
       } else {
-        setErrMsg("SignIn Failed");
+        setErrMsg("User SignIn failed");
       }
     }
   };

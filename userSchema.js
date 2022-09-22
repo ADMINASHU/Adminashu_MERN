@@ -4,6 +4,7 @@ const userSchema = mongoose.Schema({
   uname: String,
   email: String,
   password: String,
+  token: String,
 });
 
 userSchema.pre("save", async function (next) {

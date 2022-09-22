@@ -12,11 +12,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "../../api/axios";
 
-const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
-const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{6,24}$/;
 
 const SignUp = () => {
+  const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
+  const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{6,24}$/;
   //useRef for input fields..................................
   const userNameRef = useRef();
   const errRef = useRef();
@@ -65,7 +65,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (success) {
-      Navigate("/login");
+      // Navigate("/login");
     }
   }, [success]);
 
@@ -85,15 +85,15 @@ const SignUp = () => {
     try {
       const response = await axios.post(
         "/register",
-        JSON.stringify({
+        {
           uname: userName,
           email: email,
           password: password,
           cPassword: matchPassword,
-        }),
+        },
         {
           header: { "content-Type": "application/json" },
-          withCredentials: true,
+          withCredentials: false,
         }
       );
       console.log(response.data);
@@ -101,12 +101,10 @@ const SignUp = () => {
     } catch (error) {
       if (!error?.response) {
         setErrMsg("Server not responding");
-      } 
-      else if(error.response?.status === 409){
-          setErrMsg("Username already existed")
-      }
-      else{
-        setErrMsg("Registration Failed")
+      } else if (error.response?.status === 409) {
+        setErrMsg("Username already existed");
+      } else {
+        setErrMsg("User Registration Failed");
       }
     }
   };
