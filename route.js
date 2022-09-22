@@ -8,33 +8,29 @@ const bcrypt = require("bcryptjs");
 
 route.post("/register", async (req, res) => {
   const { uname, email, password, cPassword } = req.body;
-  if (!uname || !email || !password || !cPassword) {
+  if (!uname || !email || !password || !cPassword)
     return res.status(400).json({ error: "please fill all field" });
-  } else if (password != cPassword) {
+
+  if (password != cPassword)
     return res.status(412).json({ error: "Confirm password not matched" });
-  } else {
-    try {
-      const userExist = await userModel.findOne({ email: email });
-      if (userExist) {
-        return res.status(422).json({ error: "User already exist" });
-      }
 
-      const user = new userModel({ uname, email, password });
-
-      await user.save();
-      return res.status(201).json({ msg: "User registered successfully" });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error: "User registration failed" });
-    }
+  try {
+    const userExist = await userModel.findOne({ uname: uname });
+    if (userExist) return res.status(409).json({ error: "User already exist" });
+    const user = new userModel({ uname, email, password });
+    await user.save();
+    res.status(201).json({ msg: "User registered successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "User registration failed" });
   }
 });
 
 route.post("/signin", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { uname, password } = req.body;
 
-    if (!email || !password) {
+    if (!uname || !password) {
       return res.status(400).json("Please fill all field");
     }
     const dbUser = await userModel.findOne({ email: email });
@@ -44,7 +40,7 @@ route.post("/signin", async (req, res) => {
         return res.status(400).json("invalid credentials");
       } else {
         const { uname, email, password, cPassword } = dbUser;
-        const UserData = { uname, email}
+        const UserData = { uname, email };
         return res.status(200).json(UserData);
         // send user data to front-end
       }
