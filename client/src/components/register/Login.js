@@ -43,10 +43,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (success) {
+    if (!auth) {
       navigate("/profile"); // after success login navigate to profile page
     }
-  }, [success]);
+  }, []);
 
   // functions define ................................................
   const priColor = "#040480";
@@ -55,18 +55,35 @@ const Login = () => {
     e.preventDefault();
 
     try {
-
-
-
-
-      
+      const response = await axios.post(
+        "/register",
+        JSON.stringify({
+          uname: userName,
+          password: password,
+        }),
+        {
+          header: { "content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      console.log(response?.data);
+      const accessToken = response?.data?.accessToken;
+      const role = response?.data?.role;
+      setAuth({ userName, role, accessToken });
+      setUserName("");
+      setPassword("");
+      setSuccess(true);
     } catch (error) {
-      console.log(error);
+      if (!error?.response) {
+        setErrMsg("Server not responding");
+      } else if (error.response?.status === 400) {
+        setErrMsg("Missing Credentials");
+      } else if (error.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("SignIn Failed");
+      }
     }
-
-    setUserName("");
-    setPassword("");
-    setSuccess(true);
   };
 
   return (
