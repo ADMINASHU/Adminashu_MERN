@@ -1,3 +1,4 @@
+import { AuthProvider } from "./context/AuthProvider";
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
@@ -16,29 +17,20 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Navbar login={login} logUser={logUser} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          {login === "true" ? (
-            <Route
-              path="/profile"
-              element={<Profile login={login} setLogin={setLogin} logUser={logUser} />}
-            />
-          ) : (
-            <>
-              <Route
-                path="/logIn"
-                element={<Login login={login} setLogin={setLogin} setLogUser={setLogUser} />}
-              />
-              <Route path="/signUp" element={<SignUp />} />
-            </>
-          )}
-          <Route path="/*" element={<Page404 />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Navbar login={login} logUser={logUser} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/logIn" element={<Login />} />
+            <Route path="/signUp" element={<SignUp />} />
+            <Route path="/*" element={<Page404 />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }

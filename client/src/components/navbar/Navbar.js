@@ -1,10 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import "./navbar.scss";
 import { NavLink } from "react-router-dom";
 import { ReactComponent as BarImg } from "../../assets/images/bar.svg";
 import { ReactComponent as LogoImg } from "../../assets/images/logo.svg";
 import { ReactComponent as CloseImg } from "../../assets/images/close.svg";
-const Navbar = ({ login, logUser }) => {
+import AuthContext from "../../context/AuthProvider";
+
+const Navbar = () => {
+  const { auth } = useContext(AuthContext);
+  const user = {
+    name: "Ashutosh",
+  };
   const navRef = useRef();
   const [click, setClick] = useState("bar");
   const priColor = "#040480";
@@ -43,17 +49,17 @@ const Navbar = ({ login, logUser }) => {
             </NavLink>
           </li>
         </ul>
-        {login === "true" ? (
+        {!auth ? (
           <div className="account">
             <NavLink className="profile" to={"/profile"}>
-              <p className="letter">{logUser.uname.charAt(0)}</p>
+              <p className="letter">{user.name.charAt(0)}</p>
             </NavLink>
-            <p className="userName">{logUser.uname}</p>
+            <p className="userName">{user.name}</p>
           </div>
         ) : (
           <div className="register">
             <NavLink className="logIn" to={"/login"}>
-              LogIn
+              SignIn
             </NavLink>
             <NavLink className="signUp" to={"/signup"}>
               SignUp

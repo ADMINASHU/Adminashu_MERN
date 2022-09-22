@@ -1,57 +1,72 @@
-import React, { useState } from "react";
-import { ReactComponent as UserImg } from "../../assets/images/user.svg";
-import { ReactComponent as PassImg } from "../../assets/images/pass.svg";
-import bgImage from "../../assets/images/login.svg";
-import "./signUp.scss";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { Navigate, NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import "./signUp.scss";
+import bgImage from "../../assets/images/login.svg";
+import {
+  faUser,
+  faLock,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "../../api/axios";
+import AuthContext from "../../context/AuthProvider";
 
-const Login = ({ login, setLogin, setLogUser }) => {
-  const [user, setUser] = useState({ email: "", password: "" });
+const Login = () => {
+  const { auth, setAuth } = useContext(AuthContext);
+
+  //useRef for input fields..................................
+  const userNameRef = useRef();
+  const errRef = useRef();
+
+  //useState for input fields..................................
+  const [userName, setUserName] = useState("");
+  // const [validUserName, setValidUserName] = useState(false);
+  const [userNameFocus, setUserNameFocus] = useState(false);
+
+  const [password, setPassword] = useState("");
+  // const [validPassword, setValidPassword] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
+
+  const [errMsg, setErrMsg] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  // useEffect ........................................................
+  useEffect(() => {
+    userNameRef.current.focus();
+  }, []); // useEffect for first time focus in userName field
+
+  useEffect(() => {
+    setErrMsg("");
+  }, [userName, password]); // useEffect for set Error
+
   const navigate = useNavigate();
-  if (login === "true") {
-    navigate("/profile");
-  }
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
-  };
-  const { email, password } = user;
+  useEffect(() => {
+    if (success) {
+      navigate("/profile"); // after success login navigate to profile page
+    }
+  }, [success]);
+
+  // functions define ................................................
   const priColor = "#040480";
-
-  const submitSignIN = async (e) => {
+  // const insColor = "white";
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      alert("Please fill all field");
-    } else {
-      try {
-        const sendData = await fetch("http://localhost:4000/signin", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        });
-        const result = await sendData.json();
-        if (!result) {
-          alert("Server down");
-          setLogUser({});
-        } else if (sendData.status === 400) {
-          alert("invalid credentials");
-          setLogUser({});
-        } else if (sendData.status === 200) {
-          setLogUser(result);
-          setUser({});
-          console.log("User SignIn");
-          setLogin("true");
-          navigate("/profile");
-        }
-      } catch (error) {
-        console.log(error);
-        setLogin("false");
-      }
+    try {
+
+
+
+
+      
+    } catch (error) {
+      console.log(error);
     }
+
+    setUserName("");
+    setPassword("");
+    setSuccess(true);
   };
 
   return (
@@ -59,37 +74,52 @@ const Login = ({ login, setLogin, setLogUser }) => {
       <div className="logInImage">
         <img src={bgImage} alt="LogIn" />
       </div>
-      <form method="post" onSubmit={submitSignIN} className="logInForm">
+      <form method="post" onSubmit={handleSubmit} className="logInForm">
         <h1>LogIn</h1>
         <div className="inputBox">
-          <UserImg fill={priColor} height="16" />
+          <FontAwesomeIcon icon={faUser} color={priColor} size="xl" />
           <input
             className="input"
-            type="email"
-            placeholder="User Id"
-            name="email"
-            value={email}
+            type="text"
+            placeholder="username"
+            name="userName"
+            value={userName}
             autoComplete="none"
             required
-            onChange={handleInput}
+            ref={userNameRef}
+            onChange={(e) => setUserName(e.target.value)}
+            onFocus={() => setUserNameFocus(true)}
+            onBlur={() => setUserNameFocus(false)}
           />
         </div>
         <div className="inputBox">
-          <PassImg fill={priColor} height="16" />
+          <FontAwesomeIcon icon={faLock} color={priColor} size="xl" />
           <input
             className="input"
             type="password"
-            placeholder="Password"
+            placeholder="password"
             name="password"
             value={password}
-            autoComplete="none"
+            // autoComplete="off"
             required
-            onChange={handleInput}
+            onChange={(e) => setPassword(e.target.value)}
+            onFocus={() => setPasswordFocus(true)}
+            onBlur={() => setPasswordFocus(false)}
           />
         </div>
         <button className="btn btn-logIn" type="submit">
-          LogIn
+          SignIn
         </button>
+        <br />
+        <span className="invalidError" ref={errRef}>
+          {errMsg}
+        </span>
+        <br />
+        <p className="logInLink">
+          Create Account?
+          <br />
+          <NavLink to={"/signUp"}>SignUp</NavLink>
+        </p>
       </form>
     </div>
   );
