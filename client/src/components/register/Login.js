@@ -1,6 +1,7 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import { Navigate, NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import useAuth from "../../hooks/useAuth";
+import { NavLink } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./signUp.scss";
 import bgImage from "../../assets/images/login.svg";
 import {
@@ -10,10 +11,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "../../api/axios";
-import AuthContext from "../../context/AuthProvider";
+
 
 const Login = () => {
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/profile";
 
   //useRef for input fields..................................
   const userNameRef = useRef();
@@ -29,7 +34,6 @@ const Login = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
   // useEffect ........................................................
   useEffect(() => {
@@ -40,13 +44,6 @@ const Login = () => {
     setErrMsg("");
   }, [userName, password]); // useEffect for set Error
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!auth) {
-      navigate("/profile"); // after success login navigate to profile page
-    }
-  }, []);
 
   // functions define ................................................
   const priColor = "#040480";
@@ -72,10 +69,10 @@ const Login = () => {
       const role = response?.data?.role;
       const accessToken = response?.data?.accessToken;
       setAuth({ username, email, role, accessToken });
-      console.log(accessToken);
       setUserName("");
       setPassword("");
-      setSuccess(true);
+      navigate(from, { replace: true });
+      console.log(auth);
     } catch (error) {
       if (!error?.response) {
         setErrMsg("Server not responding");

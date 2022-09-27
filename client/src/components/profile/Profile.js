@@ -1,24 +1,18 @@
-import React, { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import useAuth from "../../hooks/useAuth";
 import "./profile.scss";
-import AuthContext from "../../context/AuthProvider";
 
 const Profile = () => {
-  const navigate = useNavigate();
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useAuth();
 
-  useEffect(() => {
-    if (auth) {
-      navigate("/logIn"); // after not success login navigate to login page back
-    }
-  }, []);
+
 
   return (
     <div className="page">
       <h1>Profile page </h1>
       <br />
       <br />
-      <h1>{}</h1>
+      <h1>{auth.username}</h1>
       <br />
       <br />
       <button className="btn" type="submit" onClick={() => setAuth({})}>

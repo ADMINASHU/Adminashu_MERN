@@ -1,16 +1,13 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import useAuth from "../../hooks/useAuth";
 import "./navbar.scss";
 import { NavLink } from "react-router-dom";
 import { ReactComponent as BarImg } from "../../assets/images/bar.svg";
 import { ReactComponent as LogoImg } from "../../assets/images/logo.svg";
 import { ReactComponent as CloseImg } from "../../assets/images/close.svg";
-import AuthContext from "../../context/AuthProvider";
 
 const Navbar = () => {
-  const { auth } = useContext(AuthContext);
-  const user = {
-    name: "Ashutosh",
-  };
+  const { auth, setAuth } = useAuth();
   const navRef = useRef();
   const [click, setClick] = useState("bar");
   const priColor = "#040480";
@@ -23,7 +20,6 @@ const Navbar = () => {
       navRef.current.classList.remove("hide");
     }
   };
-
   return (
     <div className="navbar">
       <NavLink className="logo" to={"/"}>
@@ -48,13 +44,22 @@ const Navbar = () => {
               Contact
             </NavLink>
           </li>
+          {auth.username ? (
+            <li>
+              <NavLink className="link" to={"/user"}>
+                User
+              </NavLink>
+            </li>
+          ) : (
+            <></>
+          )}
         </ul>
-        {!auth ? (
+        {auth.username ? (
           <div className="account">
             <NavLink className="profile" to={"/profile"}>
-              <p className="letter">{user.name.charAt(0)}</p>
+              <p className="letter">{auth.username.charAt(0)}</p>
             </NavLink>
-            <p className="userName">{user.name}</p>
+            <p className="userName">{auth.username}</p>
           </div>
         ) : (
           <div className="register">

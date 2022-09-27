@@ -40,6 +40,9 @@ route.post("/register", async (req, res) => {
   }
 });
 
+// Verify jwt token
+//  route.use(jwtVerify);
+
 route.post("/signin", async (req, res) => {
   try {
     const { uname, password } = req.body;
@@ -82,11 +85,9 @@ route.post("/signin", async (req, res) => {
       //save refreshToken in cookies
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
       });
-
-      // Verify jwt token
-      route.use(jwtVerify);
 
       // send user data to front-end
       res.status(200).json({
